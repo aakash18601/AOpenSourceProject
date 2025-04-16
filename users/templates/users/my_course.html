@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="main-content">
+    <div class="header">
+        <h1>My Enrolled Courses</h1>
+    </div>
+    <div class="card">
+        <div class="courses-container">
+            {% if enrolled_courses %}
+                {% for course in enrolled_courses %}
+                    <div class="course-card">
+                        <div class="course-department">{{ course.department }}</div>
+                        <div class="course-code">{{ course.course_code }}</div>
+                        <div class="course-title">{{ course.title }}</div>
+                        <form method="POST" action="{% url 'unenroll_course' course.id %}">
+                            {% csrf_token %}
+                            <button class="enroll-btn" style="background-color: var(--accent-color);">Unenroll</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-book-open"></i>
+                    <h3>No Enrolled Courses</h3>
+                    <p>You haven't enrolled in any courses yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

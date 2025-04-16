@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="main-content">
+    <div class="header">
+        <h1>Available Courses</h1>
+    </div>
+    <div class="card">
+        <div class="courses-container">
+            {% if available_courses %}
+                {% for course in available_courses %}
+                    <div class="course-card">
+                        <div class="course-department">{{ course.department }}</div>
+                        <div class="course-code">{{ course.course_code }}</div>
+                        <div class="course-title">{{ course.title }}</div>
+                        <form method="POST" action="{% url 'enroll_course' course.id %}">
+                            {% csrf_token %}
+                            <button class="enroll-btn">Enroll Now</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-search"></i>
+                    <h3>No Courses Available</h3>
+                    <p>All courses are currently enrolled or unavailable.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
