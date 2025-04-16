@@ -20,14 +20,10 @@ from django.urls import path, include
 from django.http import HttpResponse
 
 
-# Define a simple home view
-def home(request):
-    return HttpResponse("<h1>Welcome to College CRM</h1>")
-
-
 urlpatterns = [
+    path('jet/', include('jet.urls', namespace='jet')),
+    path('jet/dashboard/', include('jet.dashboard.urls', namespace='jet-dashboard')),
     path("admin/", admin.site.urls),
-    path("", home, name="home"),  # Root URL
     path("users/", include("users.urls")),
     path("", include("users.urls")),  # Include users app URLs
 ]

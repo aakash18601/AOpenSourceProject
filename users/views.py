@@ -42,7 +42,7 @@ from .models import Enrollment  # Ensure you have imported your model
 def student_dashboard(request):
     """Display the student dashboard with enrolled courses and progress."""
     try:
-        student = request.user.student
+        student = request.user
         enrollments = Enrollment.objects.filter(student=student)
         enrolled_course_ids = enrollments.values_list("course_id", flat=True)
         available_courses = Course.objects.exclude(id__in=enrolled_course_ids)
@@ -176,8 +176,9 @@ def register_user(request):
         username = request.POST["username"]
         password = request.POST["password"]
         confirm_password = request.POST["confirm_password"]
-        is_faculty = request.POST.get("is_faculty") == "on"
-
+        role = request.POST["role"]
+        print(role)
+        
         if password != confirm_password:
             messages.error(request, "Passwords do not match.")
             return redirect("register")
@@ -191,8 +192,6 @@ def register_user(request):
             return redirect("register")
 
         # Set role based on checkbox
-        role = "faculty" if is_faculty else "student"
-
         user = User.objects.create_user(
             username=username,
             password=password,
@@ -201,10 +200,6 @@ def register_user(request):
             last_name=last_name,
             role=role,  # 🔥 important
         )
-
-        # If faculty, set is_staff for Django admin access (optional)
-        user.is_staff = is_faculty
-        user.save()
 
         # Create profile based on role
         if role == "student":
@@ -232,14 +227,12 @@ def login_user(request):
         if user is not None:
             login(request, user)
             messages.success(request, "Login successful!")
-
+            
             # Redirect based on user role
             if user.role == "student":
                 return redirect("student_dashboard")
             elif user.role == "faculty":
                 return redirect("faculty_dashboard")
-            elif user.role == "admin":
-                return redirect("admin_dashboard")  # If you create one
             else:
                 return redirect("dashboard")  # Default
 
@@ -288,7 +281,6 @@ def edit_profile(request):
 
 
 @login_required
-@login_required
 def enroll_course(request, course_id):
     print(f"▶ Enroll function triggered for course ID: {course_id}")  # Debug
 
@@ -313,21 +305,6 @@ def enroll_course(request, course_id):
     return redirect("student_dashboard")
 
 
-def login_view(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            if user.is_staff:
-                return redirect("faculty_dashboard")
-            return redirect("student_dashboard")
-        else:
-            messages.error(request, "Invalid username or password")
-
-    return render(request, "users/login.html")
 
 
 def manage_enrollments(request):
