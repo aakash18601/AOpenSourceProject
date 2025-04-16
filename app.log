@@ -22,3 +22,8 @@
 2025-04-08 11:41:32,100 - users.models - INFO - User AL saved
 2025-04-08 11:50:28,613 - users.models - INFO - User AL saved
 2025-04-08 15:16:01,817 - users.models - INFO - User admin saved
+2025-04-16 11:51:01,848 - users.models - INFO - User student1 saved
+2025-04-16 11:52:03,463 - users.models - INFO - User Abros saved
+2025-04-16 11:52:04,006 - users.models - INFO - User Abros saved
+2025-04-16 11:52:04,096 - users.models - INFO - Student Abros saved
+2025-04-16 11:52:11,517 - users.models - INFO - User Abros saved
